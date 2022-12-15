@@ -9,6 +9,7 @@ public class App {
         File text = new File("src/Advent_of_Code_2022_Input_1.txt");
         BufferedReader br = new BufferedReader(new FileReader(text));
         ArrayList<Integer> input = new ArrayList<>();
+        ArrayList<Elf> elfs = new ArrayList<>();
         String tmp;
 
         while ((tmp = br.readLine()) != null) {
@@ -18,14 +19,35 @@ public class App {
                 input.add(Integer.parseInt(tmp));
             }
         }
-
-        for (Integer num:input) {
-            if (num == 0){
-                System.out.print("\n");
+        ArrayList<Integer> temp = new ArrayList<>();
+        for (int num:input) {
+            if(num == 0){
+                Elf elf = new Elf(temp);
+                elfs.add(elf);
+                temp = new ArrayList<>();
             } else {
-                System.out.println(num);
+                temp.add(num);
             }
         }
 
+        int highestCalories = 0;
+        int secondHighest = 0;
+        int thirdHighest = 0;
+
+        for (Elf elf:elfs) {
+            int total = elf.getTotalSize();
+            if (total > highestCalories){
+                thirdHighest = secondHighest;
+                secondHighest = highestCalories;
+                highestCalories = elf.getTotalSize();
+            } else if(total < highestCalories && total > secondHighest){
+                thirdHighest = secondHighest;
+                secondHighest = total;
+            } else if (total < highestCalories && total < secondHighest && total > thirdHighest) {
+                thirdHighest = total;
+            }
+        }
+
+        System.out.println(highestCalories + secondHighest + thirdHighest);
     }
 }
